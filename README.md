@@ -1,0 +1,88 @@
+# Todo List Management System
+
+Full-stack Todo List Management System built from the project specification in `../user/files/Todo_List_Management_System___Project_Specifications.pdf`.
+
+**Stack:** React 18 + Vite (frontend) · Java 17, Spring Boot 3.3.5, Spring Security + JWT, Spring Data JPA / Hibernate (backend) · MySQL
+
+## What it does
+
+- **Auth:** Register, login (JWT), logout, change password, view profile. Users can only access their own tasks.
+- **Tasks (CRUD):** Create, view, edit, delete, and mark complete. Each task has title, description, due date, priority (HIGH / MEDIUM / LOW), status (TODO / IN_PROGRESS / COMPLETED), created/updated dates.
+- **Search & filter:** Search by title; filter by status, priority, due date; sort by creation date / priority / due date.
+- **Dashboard:** Total, completed, pending, in-progress, overdue tasks, and completion percentage.
+
+## Project structure
+
+```
+todo-list-management-system/
+├── README.md                  # this file
+├── backend/                   # Spring Boot API (port 8080)
+│   ├── pom.xml
+│   ├── README-backend.md      # backend setup, env vars, curl examples
+│   └── src/main/java/com/todoapp/
+│       ├── config/            # CORS
+│       ├── controller/        # Auth, User, Task, Dashboard
+│       ├── dto/               # Register/Login/Auth/Task/Dashboard/Profile
+│       ├── entity/            # User, Task, TaskPriority, TaskStatus
+│       ├── exception/         # GlobalExceptionHandler
+│       ├── repository/        # UserRepository, TaskRepository
+│       ├── security/          # JwtUtil, JwtAuthenticationFilter, SecurityConfig
+│       └── service/           # AuthService, TaskService, DashboardService
+├── frontend/                  # React + Vite (port 5173)
+│   ├── package.json
+│   ├── README-frontend.md
+│   └── src/
+│       ├── api/               # axios client + auth/tasks/dashboard calls
+│       ├── components/        # Navbar, TaskCard, TaskForm, SearchFilter
+│       ├── context/           # AuthContext
+│       └── pages/             # Login, Register, Dashboard, Tasks,
+│                              # CreateTask, EditTask, Profile
+```
+
+## API endpoints
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| POST | `/api/auth/register` | Register |
+| POST | `/api/auth/login` | Login, returns JWT |
+| POST | `/api/auth/logout` | Logout (client discards token) |
+| POST | `/api/auth/change-password` | Change password |
+| GET | `/api/users/profile` | Logged-in user's profile |
+| POST / GET | `/api/tasks` | Create / list own tasks (`?search&status&priority&dueDate&sortBy&sortDir`) |
+| GET / PUT / DELETE | `/api/tasks/{id}` | Get / update / delete one task |
+| PATCH | `/api/tasks/{id}/complete` | Mark task COMPLETED |
+| GET | `/api/dashboard/summary` | Total / completed / pending / in-progress / overdue / completion % |
+
+## How to run
+
+### 1. Database
+```sql
+CREATE DATABASE todo_db;
+```
+Or run `backend/src/main/resources/schema.sql` in MySQL.
+
+### 2. Backend
+```bash
+cd backend
+# set env vars: DB_USERNAME, DB_PASSWORD, JWT_SECRET (see README-backend.md)
+mvn spring-boot:run
+# API at http://localhost:8080
+```
+
+### 3. Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+# App at http://localhost:5173
+```
+
+## Verification done here
+
+- Frontend: `npm install` + `npm run build` passed (Vite build, 109 modules, 2.40s).
+- Backend: code written for Java 17 / Spring Boot 3.3.5, no Lombok, endpoints cross-checked against the frontend. It was **not** compiled here because Java/Maven/MySQL are not installed on this machine — run `mvn spring-boot:run` on your laptop / IntelliJ to verify it end-to-end.
+- One fix made after the build: frontend change-password now calls `POST /api/auth/change-password`, matching the backend (it had used `/api/users/change-password`).
+
+## Next steps (from the spec, Section 7)
+
+Email reminders, recurring tasks, drag-and-drop, dark/light theme, categories, pagination, file attachments, calendar view, admin dashboard, Docker, CI/CD.
