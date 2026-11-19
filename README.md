@@ -54,6 +54,10 @@ todo-list-management-system/
 | PATCH | `/api/tasks/{id}/complete` | Mark task COMPLETED |
 | GET | `/api/dashboard/summary` | Total / completed / pending / in-progress / overdue / completion % |
 
+## Deploy
+
+See [DEPLOY.md](DEPLOY.md) for the full Render guide: backend as a Docker web service on Render, frontend as a Render static site, MySQL on Aiven (Render has no managed MySQL). `render.yaml` is the Render Blueprint for both services; `backend/Dockerfile` and `docker-compose.yml` (local Docker run) are included. No secrets are in the repo — all DB / JWT / mail settings are env vars set on the Render dashboard.
+
 ## How to run
 
 ### Clone in IntelliJ IDEA
@@ -92,4 +96,4 @@ npm run dev
 
 ## Next steps (from the spec, Section 7)
 
-Email reminders, recurring tasks, drag-and-drop, dark/light theme, categories, pagination, file attachments, calendar view, admin dashboard, Docker, CI/CD.
+Done already: email reminders, in-app alerts, Docker. Still to do: recurring tasks, drag-and-drop, dark/light theme, categories, pagination, file attachments, calendar view, admin dashboard, CI/CD.

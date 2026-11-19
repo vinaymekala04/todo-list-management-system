@@ -1,0 +1,52 @@
+# Render Blueprint — Todo List Management System
+# Deploy with: Render Dashboard → New → Blueprint → select this repo.
+# Render reads this file and creates both services below.
+# Secrets / URLs marked sync: false must be filled in on the Render dashboard
+# after the services are created (see DEPLOY.md) — they are never in this file.
+services:
+  # --- Spring Boot backend (Docker) ---
+  - type: web
+    name: todo-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    # Free web services spin down after 15 min without traffic; the first
+    # request after that takes ~30-60s to wake up. Use Starter ($7/mo) for always-on.
+    envVars:
+      - key: DB_URL
+        sync: false # e.g. jdbc:mysql://<host>:<port>/todo_db?sslMode=REQUIRED&serverTimezone=UTC (Aiven MySQL)
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true # Render generates a fresh secret — never reuse the dev default
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false # set to your frontend URL, e.g. https://todo-frontend.onrender.com
+      - key: MAIL_HOST
+        value: smtp.gmail.com
+      - key: MAIL_PORT
+        value: "587"
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: MAIL_FROM
+        sync: false # usually same as MAIL_USERNAME
+      - key: REMINDER_ENABLED
+        value: "true"
+      - key: REMINDER_CRON
+        value: 0 0 8 * * *
+
+  # --- React frontend (static site) ---
+  - type: static
+    name: todo-frontend
+    buildCommand: npm install && npm run build
+    # Publish path is relative to rootDir below, so this is frontend/dist.
+    staticPublishPath: dist
+    rootDir: frontend
+    plan: free
+    envVars:
+      - key: VITE_API_URL
+        sync: false # set to your backend URL + /api, e.g. https://todo-backend-xxxx.onrender.com/api
