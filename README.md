@@ -10,7 +10,7 @@ Full-stack Todo List Management System built from the project specification in `
 - **Tasks (CRUD):** Create, view, edit, delete, and mark complete. Each task has title, description, due date, priority (HIGH / MEDIUM / LOW), status (TODO / IN_PROGRESS / COMPLETED), created/updated dates.
 - **Search & filter:** Search by title; filter by status, priority, due date; sort by creation date / priority / due date.
 - **Dashboard:** Total, completed, pending, in-progress, overdue tasks, and completion percentage.
-- **Alerts:** In-app banner on the Dashboard for Overdue / Due today / Due tomorrow tasks, with matching badges on task cards. Email reminders run daily at 8am (one grouped email per user) — configure with `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD` (Gmail SMTP + App Password, see `backend/README-backend.md`); test it from the Dashboard with "Send test email reminder" or `POST /api/alerts/send-reminders`. If mail is not configured, reminders are skipped with a log warning and the app keeps working.
+- **Alerts:** In-app banner on the Dashboard for Overdue / Due today / Due tomorrow tasks, with matching badges on task cards. Email reminders run daily at 8am (one grouped email per user) — configure with `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD` (Gmail SMTP + App Password, see `backend/README-backend.md`); test it with `POST /api/alerts/send-reminders` via Postman/curl (the manual trigger is backend-only, not shown in the UI). If mail is not configured, reminders are skipped with a log warning and the app keeps working.
 
 ## Project structure
 

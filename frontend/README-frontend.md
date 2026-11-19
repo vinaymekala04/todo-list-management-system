@@ -67,7 +67,6 @@ clears the session and redirects to `/login` (see `src/api/axios.js`).
 | Complete task | `PATCH /api/tasks/{id}/complete` |
 | Dashboard summary | `GET /api/dashboard/summary` |
 | Alerts summary | `GET /api/alerts/summary` |
-| Send email reminders | `POST /api/alerts/send-reminders` |
 
 Notes:
 
@@ -84,11 +83,10 @@ Notes:
   when nothing is overdue, due today, or due tomorrow. Otherwise it shows
   three sections — Overdue (red), Due today (amber), Due tomorrow (blue) —
   each listing task titles with due date and priority, linking to the task's
-  edit page. Its "Send test email reminder" button calls
-  `POST /api/alerts/send-reminders` and shows the sent/failed/message
-  result; if mail is not configured on the backend, the error is shown
-  instead. Email sending itself is configured on the backend (SMTP
-  settings + a scheduled job) — the frontend only triggers and displays it.
+  edit page. Email sending itself is configured on the backend (SMTP
+  settings + a daily scheduled job). The manual trigger
+  `POST /api/alerts/send-reminders` is intentionally not exposed in the UI —
+  it is a backend-only endpoint for testing via Postman/curl.
   Task cards (`TaskCard.jsx`) also show a "Due today" amber badge and a
   "Due tomorrow" blue badge, alongside the existing red "(Overdue)"
   treatment, for non-completed tasks.
@@ -115,12 +113,12 @@ frontend/
     │   ├── auth.js         # auth + profile endpoints
     │   ├── tasks.js        # task CRUD + complete endpoints
     │   ├── dashboard.js    # dashboard summary (normalised)
-    │   └── alerts.js       # alerts summary + send-reminders endpoints
+    │   └── alerts.js       # alerts summary endpoint
     ├── context/
     │   └── AuthContext.jsx # login / register / logout, user + token state
     ├── components/
     │   ├── Navbar.jsx
-    │   ├── AlertsBanner.jsx # overdue / due-today / due-tomorrow banner + test email button
+    │   ├── AlertsBanner.jsx # overdue / due-today / due-tomorrow banner
     │   ├── TaskCard.jsx    # priority/status badges, overdue / due-today / due-tomorrow highlight
     │   ├── TaskForm.jsx    # create/edit form (title, description, due date, priority, status)
     │   └── SearchFilter.jsx

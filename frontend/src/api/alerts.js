@@ -1,12 +1,15 @@
 import api from './axios.js';
 
-// Alerts endpoints (in-app + email reminders).
+// Alerts endpoint (in-app only).
 // GET /api/alerts/summary returns:
 // { overdueCount, dueTodayCount, dueTomorrowCount,
 //   overdueTasks: [...], dueTodayTasks: [...], dueTomorrowTasks: [...] }
 // with task objects in the same TaskResponse shape as the tasks API
 // (id, title, description, dueDate, priority, status, createdAt, updatedAt).
-// POST /api/alerts/send-reminders returns { sent, failed, message }.
+//
+// NOTE: POST /api/alerts/send-reminders is intentionally not called from the
+// UI — it is a backend-only endpoint for testing via Postman/curl.
+// In production, email reminders are sent by the backend's daily job.
 export const alertsApi = {
   getAlertSummary: async () => {
     const { data } = await api.get('/alerts/summary');
@@ -20,18 +23,6 @@ export const alertsApi = {
       overdueTasks,
       dueTodayTasks,
       dueTomorrowTasks,
-    };
-  },
-
-  // Triggers the backend to send due-date email reminders now.
-  // Returns { sent, failed, message }. Fails with a readable error
-  // when mail is not configured on the backend.
-  sendReminders: async () => {
-    const { data } = await api.post('/alerts/send-reminders');
-    return {
-      sent: data.sent ?? 0,
-      failed: data.failed ?? 0,
-      message: data.message ?? '',
     };
   },
 };

@@ -102,7 +102,7 @@ logged-in user — a user can never see, edit, or delete another user's tasks
 | Method | Endpoint | Purpose |
 |---|---|---|
 | GET | `/api/alerts/summary` | In-app alerts for the logged-in user: `{ overdueCount, dueTodayCount, dueTomorrowCount, overdueTasks, dueTodayTasks, dueTomorrowTasks }`. Only non-`COMPLETED` tasks; overdue = due before today, due today = due today, due tomorrow = due tomorrow. |
-| POST | `/api/alerts/send-reminders` | Manually trigger the email reminder run for the logged-in user. Returns `{ sent, failed, message }` (counts are reminder **emails**, one email groups all of the user's due/overdue tasks). |
+| POST | `/api/alerts/send-reminders` | Manually trigger the email reminder run for the logged-in user. Returns `{ sent, failed, message }` (counts are reminder **emails**, one email groups all of the user's due/overdue tasks). Backend-only — not exposed in the UI; test it via Postman/curl. |
 
 ## 5. Email reminders — how they work
 
