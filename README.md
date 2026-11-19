@@ -10,6 +10,7 @@ Full-stack Todo List Management System built from the project specification in `
 - **Tasks (CRUD):** Create, view, edit, delete, and mark complete. Each task has title, description, due date, priority (HIGH / MEDIUM / LOW), status (TODO / IN_PROGRESS / COMPLETED), created/updated dates.
 - **Search & filter:** Search by title; filter by status, priority, due date; sort by creation date / priority / due date.
 - **Dashboard:** Total, completed, pending, in-progress, overdue tasks, and completion percentage.
+- **Alerts:** In-app banner on the Dashboard for Overdue / Due today / Due tomorrow tasks, with matching badges on task cards. Email reminders run daily at 8am (one grouped email per user) — configure with `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD` (Gmail SMTP + App Password, see `backend/README-backend.md`); test it from the Dashboard with "Send test email reminder" or `POST /api/alerts/send-reminders`. If mail is not configured, reminders are skipped with a log warning and the app keeps working.
 
 ## Project structure
 
@@ -54,6 +55,12 @@ todo-list-management-system/
 | GET | `/api/dashboard/summary` | Total / completed / pending / in-progress / overdue / completion % |
 
 ## How to run
+
+### Clone in IntelliJ IDEA
+1. On the welcome screen, click **Get from VCS** (or File → New → Project from Version Control).
+2. Paste `https://github.com/vinaymekala04/todo-list-management-system.git`, choose where to save it, click **Clone**, then **Trust Project**.
+3. **Backend:** open the `backend` folder / `pom.xml`, let Maven import it, set JDK 17, create the `todo_db` database in MySQL, then run `TodoListApplication.java`.
+4. **Frontend:** in IntelliJ's terminal, run `cd frontend`, `npm install`, `npm run dev`.
 
 ### 1. Database
 ```sql

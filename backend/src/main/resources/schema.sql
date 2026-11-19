@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
                                 ON UPDATE CURRENT_TIMESTAMP,
+    last_reminder_sent_at TIMESTAMP NULL,
     PRIMARY KEY (id),
     KEY idx_tasks_user_id (user_id),
     KEY idx_tasks_status (status),

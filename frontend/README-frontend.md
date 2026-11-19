@@ -66,6 +66,8 @@ clears the session and redirects to `/login` (see `src/api/axios.js`).
 | Delete task | `DELETE /api/tasks/{id}` |
 | Complete task | `PATCH /api/tasks/{id}/complete` |
 | Dashboard summary | `GET /api/dashboard/summary` |
+| Alerts summary | `GET /api/alerts/summary` |
+| Send email reminders | `POST /api/alerts/send-reminders` |
 
 Notes:
 
@@ -77,6 +79,19 @@ Notes:
   over the fetched task list (search by title; filter by status, priority,
   due date; sort by created date, due date, priority, title), so it works
   even if the backend does not support query parameters.
+- **Alerts:** `src/components/AlertsBanner.jsx` (rendered at the top of the
+  Dashboard) fetches `GET /api/alerts/summary` on mount and shows nothing
+  when nothing is overdue, due today, or due tomorrow. Otherwise it shows
+  three sections — Overdue (red), Due today (amber), Due tomorrow (blue) —
+  each listing task titles with due date and priority, linking to the task's
+  edit page. Its "Send test email reminder" button calls
+  `POST /api/alerts/send-reminders` and shows the sent/failed/message
+  result; if mail is not configured on the backend, the error is shown
+  instead. Email sending itself is configured on the backend (SMTP
+  settings + a scheduled job) — the frontend only triggers and displays it.
+  Task cards (`TaskCard.jsx`) also show a "Due today" amber badge and a
+  "Due tomorrow" blue badge, alongside the existing red "(Overdue)"
+  treatment, for non-completed tasks.
 - **Dashboard summary:** `src/api/dashboard.js` normalises the response
   (`totalTasks`/`total`, `completedTasks`/`completed`, …) and computes the
   completion percentage when the backend does not return one.
@@ -99,12 +114,14 @@ frontend/
     │   ├── axios.js        # axios instance, JWT interceptor, 401 handling
     │   ├── auth.js         # auth + profile endpoints
     │   ├── tasks.js        # task CRUD + complete endpoints
-    │   └── dashboard.js    # dashboard summary (normalised)
+    │   ├── dashboard.js    # dashboard summary (normalised)
+    │   └── alerts.js       # alerts summary + send-reminders endpoints
     ├── context/
     │   └── AuthContext.jsx # login / register / logout, user + token state
     ├── components/
     │   ├── Navbar.jsx
-    │   ├── TaskCard.jsx    # priority/status badges, overdue highlight
+    │   ├── AlertsBanner.jsx # overdue / due-today / due-tomorrow banner + test email button
+    │   ├── TaskCard.jsx    # priority/status badges, overdue / due-today / due-tomorrow highlight
     │   ├── TaskForm.jsx    # create/edit form (title, description, due date, priority, status)
     │   └── SearchFilter.jsx
     └── pages/

@@ -57,6 +57,14 @@ public class Task {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    /**
+     * When a reminder email last included this task (null = never reminded).
+     * Used to avoid sending the same reminder twice in one day, e.g. after
+     * an application restart. Set by ReminderService after a successful send.
+     */
+    @Column(name = "last_reminder_sent_at")
+    private LocalDateTime lastReminderSentAt;
+
     public Task() {
     }
 
@@ -144,6 +152,14 @@ public class Task {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getLastReminderSentAt() {
+        return lastReminderSentAt;
+    }
+
+    public void setLastReminderSentAt(LocalDateTime lastReminderSentAt) {
+        this.lastReminderSentAt = lastReminderSentAt;
     }
 
     @Override

@@ -522,6 +522,146 @@ textarea {
   margin: 0;
 }
 
+/* ---------- Alerts banner ---------- */
+
+.alerts-banner {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.alerts-banner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.alerts-banner-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.alerts-sections {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.alerts-section {
+  border: 1px solid var(--border);
+  border-left: 5px solid var(--primary);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+}
+
+.alerts-section h3 {
+  font-size: 0.95rem;
+  margin: 0 0 0.5rem;
+}
+
+.alerts-section-overdue {
+  border-left-color: var(--danger);
+  background: #fef2f2;
+}
+
+.alerts-section-overdue h3 {
+  color: #991b1b;
+}
+
+.alerts-section-due-today {
+  border-left-color: var(--warning);
+  background: #fffbeb;
+}
+
+.alerts-section-due-today h3 {
+  color: #92400e;
+}
+
+.alerts-section-due-tomorrow {
+  border-left-color: #2563eb;
+  background: #eff6ff;
+}
+
+.alerts-section-due-tomorrow h3 {
+  color: #1e40af;
+}
+
+.alerts-task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.alerts-task-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  font-weight: 600;
+}
+
+.alerts-task-meta {
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.alert-warning {
+  background: #fffbeb;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.alert-info {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+/* ---------- Due-date badges (TaskCard) ---------- */
+
+.badge-due-today {
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.badge-due-tomorrow {
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.task-card-due-today {
+  border-left: 5px solid var(--warning);
+}
+
+.task-card-due-tomorrow {
+  border-left: 5px solid #2563eb;
+}
+
+.task-due-today {
+  color: var(--warning);
+  font-weight: 600;
+}
+
+.task-due-tomorrow {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .alerts-sections {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 768px) {

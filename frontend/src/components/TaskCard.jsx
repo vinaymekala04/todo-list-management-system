@@ -21,12 +21,35 @@ export function isOverdue(task) {
   return due < new Date();
 }
 
+// Calendar-day difference between the task's due date and today.
+// null when there is no due date or the task is completed.
+function dueDayDiff(task) {
+  if (!task.dueDate || task.status === 'COMPLETED') return null;
+  const due = new Date(task.dueDate);
+  if (Number.isNaN(due.getTime())) return null;
+  const today = new Date();
+  const startOf = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  return Math.round((startOf(due) - startOf(today)) / (24 * 60 * 60 * 1000));
+}
+
+export function isDueToday(task) {
+  return dueDayDiff(task) === 0;
+}
+
+export function isDueTomorrow(task) {
+  return dueDayDiff(task) === 1;
+}
+
 export default function TaskCard({ task, onComplete, onDelete, completing, deleting }) {
   const overdue = isOverdue(task);
+  const dueToday = !overdue && isDueToday(task);
+  const dueTomorrow = !overdue && isDueTomorrow(task);
   const completed = task.status === 'COMPLETED';
 
   return (
-    <article className={`task-card ${completed ? 'task-card-completed' : ''} ${overdue ? 'task-card-overdue' : ''}`}>
+    <article
+      className={`task-card ${completed ? 'task-card-completed' : ''} ${overdue ? 'task-card-overdue' : ''} ${dueToday ? 'task-card-due-today' : ''} ${dueTomorrow ? 'task-card-due-tomorrow' : ''}`}
+    >
       <div className="task-card-header">
         <h3 className="task-card-title">{task.title}</h3>
         <span className={`badge badge-priority-${(task.priority || 'MEDIUM').toLowerCase()}`}>
@@ -40,10 +63,12 @@ export default function TaskCard({ task, onComplete, onDelete, completing, delet
         <span className={`badge badge-status-${(task.status || 'TODO').toLowerCase()}`}>
           {STATUS_LABELS[task.status] || task.status}
         </span>
-        <span className={overdue ? 'task-due-overdue' : ''}>
+        <span className={overdue ? 'task-due-overdue' : dueToday ? 'task-due-today' : dueTomorrow ? 'task-due-tomorrow' : ''}>
           📅 Due: {formatDate(task.dueDate)}
           {overdue ? ' (Overdue)' : ''}
         </span>
+        {dueToday && <span className="badge badge-due-today">Due today</span>}
+        {dueTomorrow && <span className="badge badge-due-tomorrow">Due tomorrow</span>}
         {task.createdAt && <span>Created: {formatDate(task.createdAt)}</span>}
       </div>
 

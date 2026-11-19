@@ -35,6 +35,13 @@ public interface TaskRepository extends JpaRepository<Task, Long>, JpaSpecificat
     /** Overdue = due before today and not completed. */
     List<Task> findByUserAndDueDateBeforeAndStatusNot(User user, LocalDate date, TaskStatus status);
 
+    /** Non-completed tasks of a user due on one specific date. */
+    List<Task> findByUserAndStatusNotAndDueDate(User user, TaskStatus status, LocalDate dueDate);
+
+    /** Non-completed tasks of a user due within a date range (inclusive). */
+    List<Task> findByUserAndStatusNotAndDueDateBetween(User user, TaskStatus status,
+                                                        LocalDate from, LocalDate to);
+
     long countByUser(User user);
 
     long countByUserAndStatus(User user, TaskStatus status);

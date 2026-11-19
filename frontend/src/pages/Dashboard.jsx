@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { dashboardApi } from '../api/dashboard.js';
+import AlertsBanner from '../components/AlertsBanner.jsx';
 import { getErrorMessage } from '../api/axios.js';
 import { useAuth } from '../context/AuthContext.jsx';
 
@@ -44,6 +45,8 @@ export default function Dashboard() {
       </div>
 
       {error && <div className="alert alert-error">{error}</div>}
+
+      <AlertsBanner />
 
       {summary && (
         <>
