@@ -56,7 +56,7 @@ todo-list-management-system/
 
 ## Deploy
 
-See [DEPLOY.md](DEPLOY.md) for the full Render guide: backend as a Docker web service on Render, frontend as a Render static site, MySQL on Aiven (Render has no managed MySQL). `render.yaml` is the Render Blueprint for both services; `backend/Dockerfile` and `docker-compose.yml` (local Docker run) are included. No secrets are in the repo — all DB / JWT / mail settings are env vars set on the Render dashboard.
+See [DEPLOY.md](DEPLOY.md) for the full Render guide: everything on Render — Postgres database + backend as a Docker web service + frontend as a static site, all free tier. The backend uses the `prod` Spring profile on Render (PostgreSQL); local dev still uses MySQL with the default profile. `render.yaml` is the Render Blueprint for all three resources; `backend/Dockerfile` and `docker-compose.yml` (local Docker run, now Postgres) are included. No secrets are in the repo — all DB / JWT / mail settings are env vars set on the Render dashboard. Note: Render's free Postgres expires after 30 days — see DEPLOY.md before relying on it long-term.
 
 ## How to run
 

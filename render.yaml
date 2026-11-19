@@ -1,10 +1,15 @@
-# Render Blueprint — Todo List Management System
+# Render Blueprint — Todo List Management System (everything on Render)
 # Deploy with: Render Dashboard → New → Blueprint → select this repo.
-# Render reads this file and creates both services below.
+# Render reads this file and creates the database + both services below.
 # Secrets / URLs marked sync: false must be filled in on the Render dashboard
 # after the services are created (see DEPLOY.md) — they are never in this file.
+#
+# WARNING — free Postgres expires: Render's free PostgreSQL plan expires
+# after 30 days (and its data with it). It is fine for trying the deployment
+# out; for anything you want to keep, upgrade the database to a paid plan
+# (Basic) in the Render dashboard before day 30, or export your data first.
 services:
-  # --- Spring Boot backend (Docker) ---
+  # --- Spring Boot backend (Docker, PostgreSQL via `prod` profile) ---
   - type: web
     name: todo-backend
     runtime: docker
@@ -14,12 +19,28 @@ services:
     # Free web services spin down after 15 min without traffic; the first
     # request after that takes ~30-60s to wake up. Use Starter ($7/mo) for always-on.
     envVars:
-      - key: DB_URL
-        sync: false # e.g. jdbc:mysql://<host>:<port>/todo_db?sslMode=REQUIRED&serverTimezone=UTC (Aiven MySQL)
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: DB_HOST
+        fromDatabase:
+          name: todo-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: todo-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: todo-db
+          property: database
       - key: DB_USERNAME
-        sync: false
+        fromDatabase:
+          name: todo-db
+          property: user
       - key: DB_PASSWORD
-        sync: false
+        fromDatabase:
+          name: todo-db
+          property: password
       - key: JWT_SECRET
         generateValue: true # Render generates a fresh secret — never reuse the dev default
       - key: CORS_ALLOWED_ORIGINS
@@ -50,3 +71,11 @@ services:
     envVars:
       - key: VITE_API_URL
         sync: false # set to your backend URL + /api, e.g. https://todo-backend-xxxx.onrender.com/api
+
+databases:
+  # --- Managed PostgreSQL (free — expires after 30 days, see warning above) ---
+  - name: todo-db
+    databaseName: todo_db
+    user: todo_user
+    plan: free
+    postgresMajorVersion: "16"
