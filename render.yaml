@@ -1,13 +1,16 @@
-# Render Blueprint — Todo List Management System (everything on Render)
+# Render Blueprint — Todo List Management System (backend only)
 # Deploy with: Render Dashboard → New → Blueprint → select this repo.
-# Render reads this file and creates the database + both services below.
-# Secrets / URLs marked sync: false must be filled in on the Render dashboard
-# after the services are created (see DEPLOY.md) — they are never in this file.
+# Render reads this file and creates the backend service below.
+# The frontend is NOT here anymore — it deploys on Vercel (see DEPLOY.md).
+# The database is NOT on Render either — it is Neon (free, permanent).
+# Set the DB_* values below on the Render dashboard from your Neon
+# connection string (see DEPLOY.md). Secrets / URLs marked sync: false
+# must be filled in on the Render dashboard after the services are
+# created — they are never in this file.
 #
-# WARNING — free Postgres expires: Render's free PostgreSQL plan expires
-# after 30 days (and its data with it). It is fine for trying the deployment
-# out; for anything you want to keep, upgrade the database to a paid plan
-# (Basic) in the Render dashboard before day 30, or export your data first.
+# Why Neon instead of Render Postgres: Render's free database expires
+# after 30 days. Neon's free plan has no expiry (1 GB storage,
+# 100 compute-hours/month, no credit card).
 services:
   # --- Spring Boot backend (Docker, PostgreSQL via `prod` profile) ---
   - type: web
@@ -22,29 +25,21 @@ services:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: DB_HOST
-        fromDatabase:
-          name: todo-db
-          property: host
+        sync: false # Neon host, e.g. ep-xxx-xxx.ap-south-1.aws.neon.tech
       - key: DB_PORT
-        fromDatabase:
-          name: todo-db
-          property: port
+        value: "5432"
       - key: DB_NAME
-        fromDatabase:
-          name: todo-db
-          property: database
+        sync: false # Neon database name, e.g. neondb
       - key: DB_USERNAME
-        fromDatabase:
-          name: todo-db
-          property: user
+        sync: false # Neon role, e.g. neondb_owner
       - key: DB_PASSWORD
-        fromDatabase:
-          name: todo-db
-          property: password
+        sync: false # Neon password (from the connection string)
+      - key: DB_SSLMODE
+        value: require # Neon requires SSL
       - key: JWT_SECRET
         generateValue: true # Render generates a fresh secret — never reuse the dev default
       - key: CORS_ALLOWED_ORIGINS
-        sync: false # set to your frontend URL, e.g. https://todo-frontend.onrender.com
+        sync: false # set to your Vercel frontend URL, e.g. https://todo-frontend.vercel.app
       - key: MAIL_HOST
         value: smtp.gmail.com
       - key: MAIL_PORT
@@ -59,23 +54,3 @@ services:
         value: "true"
       - key: REMINDER_CRON
         value: 0 0 8 * * *
-
-  # --- React frontend (static site) ---
-  - type: static
-    name: todo-frontend
-    buildCommand: npm install && npm run build
-    # Publish path is relative to rootDir below, so this is frontend/dist.
-    staticPublishPath: dist
-    rootDir: frontend
-    plan: free
-    envVars:
-      - key: VITE_API_URL
-        sync: false # set to your backend URL + /api, e.g. https://todo-backend-xxxx.onrender.com/api
-
-databases:
-  # --- Managed PostgreSQL (free — expires after 30 days, see warning above) ---
-  - name: todo-db
-    databaseName: todo_db
-    user: todo_user
-    plan: free
-    postgresMajorVersion: "16"

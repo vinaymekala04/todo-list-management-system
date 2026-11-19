@@ -56,7 +56,7 @@ todo-list-management-system/
 
 ## Deploy
 
-See [DEPLOY.md](DEPLOY.md) for the full Render guide: everything on Render — Postgres database + backend as a Docker web service + frontend as a static site, all free tier. The backend uses the `prod` Spring profile on Render (PostgreSQL); local dev still uses MySQL with the default profile. `render.yaml` is the Render Blueprint for all three resources; `backend/Dockerfile` and `docker-compose.yml` (local Docker run, now Postgres) are included. No secrets are in the repo — all DB / JWT / mail settings are env vars set on the Render dashboard. Note: Render's free Postgres expires after 30 days — see DEPLOY.md before relying on it long-term.
+See [DEPLOY.md](DEPLOY.md) for the full deploy guide: backend as a Docker web service on Render (free tier), frontend on Vercel (free tier), database on Neon PostgreSQL (free plan, no expiry — Render's free Postgres expires after 30 days, so it is not used). The backend uses the `prod` Spring profile on Render (PostgreSQL, SSL via `DB_SSLMODE=require`); local dev still uses MySQL with the default profile. `render.yaml` is the Render Blueprint for the backend only; `frontend/vercel.json` handles SPA routing on Vercel; `backend/Dockerfile` and `docker-compose.yml` (local Docker run, now Postgres) are included. No secrets are in the repo — all DB / JWT / mail settings are env vars set on the Render dashboard, and `VITE_API_URL` is set on Vercel.
 
 ## How to run
 

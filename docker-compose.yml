@@ -33,6 +33,7 @@ services:
       DB_NAME: todo_db
       DB_USERNAME: ${DB_USERNAME:-postgres}
       DB_PASSWORD: ${DB_PASSWORD:-todo123}
+      DB_SSLMODE: disable # local Postgres has no SSL; cloud (Neon) defaults to require
       JWT_SECRET: ${JWT_SECRET:-VG9kb0xpc3RNYW5hZ2VtZW50U3lzdGVtU2VjcmV0S2V5Rm9ySldUU2lnbmluZ0tleTEyMzQ1Ng==}
       CORS_ALLOWED_ORIGINS: http://localhost:5173
     depends_on:
